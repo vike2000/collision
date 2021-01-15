@@ -70,8 +70,8 @@ class TestCommand extends Command
 
         if ($this->option('parallel')) {
             // @phpstan-ignore-next-line
-            if ((int) \Illuminate\Foundation\Application::VERSION[0] < 9) {
-                throw new RequirementsException('Running tests in parallel requires at least Laravel ^9.0.');
+            if ((int) \Illuminate\Foundation\Application::VERSION[0] < 8) {
+                throw new RequirementsException('Running tests in parallel requires at least Laravel ^8.0.');
             }
 
             if (!$this->isParallelDependenciesInstalled()) {

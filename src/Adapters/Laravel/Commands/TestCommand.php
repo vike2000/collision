@@ -114,6 +114,22 @@ class TestCommand extends Command
     }
 
     /**
+     * Get the array of arguments for running PHPUnit.
+     *
+     * @param bool $quote
+     *
+     * @return string|null
+     */
+    protected function phpBinary($quote = false)
+    {
+        if (PHP_BINARY === '') {
+            return null;
+        }
+
+        return $quote ? '"' . PHP_BINARY . '" ' : PHP_BINARY;
+    }
+
+    /**
      * Get the PHP binary to execute.
      *
      * @return array
@@ -133,10 +149,10 @@ class TestCommand extends Command
         }
 
         if ('phpdbg' === PHP_SAPI) {
-            return [PHP_BINARY, '-qrr', $command];
+            return array_merge((array) $this->phpBinary(), ['-qrr', $command]);
         }
 
-        return [PHP_BINARY, $command];
+        return array_merge((array) $this->phpBinary(), [$command]);
     }
 
     /**
@@ -286,7 +302,7 @@ class TestCommand extends Command
         $composerPath = getcwd() . '/composer.phar';
 
         if (file_exists($composerPath)) {
-            return '"' . PHP_BINARY . '" ' . $composerPath;
+            return $this->phpBinary(true) . $composerPath;
         }
 
         return 'composer';
